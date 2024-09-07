@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electricity Consumption Calculator</title>
+   <link rel="stylesheet" href="styles.css">
+    <!-- Include Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+    >
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -14,18 +18,29 @@
             margin: 0;
         }
         .my-header img {
-            width: 25px;
+            width: 28px;
             margin-right: 5px;
         }
         .my-header {
+            font-family: Arial, sans-serif;
             display: flex;
             align-items: center;
-            font-size: 25px;
+            font-size: 28px;
             font-weight: 800;
-            color: #1954af;
+            color: #224c8f;
+        }
+        input{
+          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+           border-color:rgba(49, 121, 173,0.8);
+           border-radius:8px;
+        }
+        input:focus{
+          outline: none;
+          border-color:rgb(36, 132, 201);
         }
         .input-group {
             margin-bottom: 10px;
+            
         }
         .input-group label {
             display: block;
@@ -39,15 +54,24 @@
         .results {
             margin-top: 20px;
         }
-        table {
+        button{
+          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+           border-color:rgba(49, 121, 173,0.8);
+           border-radius:6px;
+        }
+         table {
             width: 100%;
             border-collapse: collapse;
+            border-radius: 8px; /* Add border-radius to the table */
+            overflow: hidden; /* Ensure rounded corners are applied */
+            border-color:  #2484c9; /* Add border to the table */
+box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         }
         table, th, td {
-            border: 1px solid #ddd;
+            border: 1px solid rgba(49, 121, 173,0.1);
         }
         th, td {
-            padding: 15px;
+            padding: 12px 10px;
             text-align: left;
             position: relative;
         }
@@ -65,9 +89,8 @@
         .error {
             color: red;
         }
+    
     </style>
-    <!-- Include Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -87,6 +110,7 @@
     </div>
 
     <script>
+    
         function formatNumber(number) {
             return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         }
@@ -191,6 +215,7 @@
                 </table>
             `;
         }
+ 
     </script>
 </body>
 </html>
