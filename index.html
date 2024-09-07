@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity Consumption Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0;
+        }
+        .my-header img {
+            width: 25px;
+            margin-right: 5px;
+        }
+        .my-header {
+            display: flex;
+            align-items: center;
+            font-size: 25px;
+            font-weight: 800;
+            color: #1954af;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            position: relative;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .copy-btn {
+            cursor: pointer;
+            color: lightgrey;
+            font-size: 18px;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+    <!-- Include Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="my-header">
+            <img src="https://static.wixstatic.com/media/5a8706_bef7adaebe964f33889eb6c9a920379a~mv2.png/v1/fill/w_102,h_102,al_c,lg_1,q_85,enc_auto/%E5%8F%B0%E7%81%A3%E5%AF%8C%E5%8D%9A%E5%85%AC%E5%8F%B8LOGO.png">
+            <span>FUJIHIRO</span>
+        </div>
+        <h2>Electricity Consumption</h2>
+        <div class="input-group">
+            <label for="totalConsumption">Total Electricity Consumption (kWh):</label>
+            <input type="number" id="totalConsumption" placeholder="Enter total consumption" required>
+        </div>
+        <button onclick="calculate()">Calculate</button>
+        <div class="results" id="results">
+            <!-- Results will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        function formatNumber(number) {
+            return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+
+        function copyToClipboard(text) {
+            const textToCopy = text.replace(' kWh', ''); // Exclude 'kWh'
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('Copied to clipboard: ' + textToCopy);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        function calculate() {
+            // Get the total consumption value from the input field
+            const totalConsumption = parseFloat(document.getElementById('totalConsumption').value);
+            
+            // Validate the input
+            if (isNaN(totalConsumption) || totalConsumption <= 0) {
+                alert("Please enter a valid number for total consumption.");
+                return;
+            }
+
+            // Updated fixed values for each category
+            const msProductionValue = 38;
+            const rmProductionValue = 26;
+            const mainOfficeValue = 21;
+            const auxiliaryOthersValue = 3;
+            const auxiliaryCanteenGuardHousesValue = 12;
+
+            // Calculate the sum of the fixed values
+            const totalFixed = msProductionValue + rmProductionValue + mainOfficeValue + auxiliaryOthersValue + auxiliaryCanteenGuardHousesValue;
+
+            // Calculate the proportion of each category based on the total fixed
+            const msProductionProportion = msProductionValue / totalFixed;
+            const rmProductionProportion = rmProductionValue / totalFixed;
+            const mainOfficeProportion = mainOfficeValue / totalFixed;
+            const auxiliaryOthersProportion = auxiliaryOthersValue / totalFixed;
+            const auxiliaryCanteenGuardHousesProportion = auxiliaryCanteenGuardHousesValue / totalFixed;
+
+            // Calculate each category based on the input total
+            const msProduction = totalConsumption * msProductionProportion;
+            const rmProduction = totalConsumption * rmProductionProportion;
+            const mainOffice = totalConsumption * mainOfficeProportion;
+            const auxiliaryOthers = totalConsumption * auxiliaryOthersProportion;
+            const auxiliaryCanteenGuardHouses = totalConsumption * auxiliaryCanteenGuardHousesProportion;
+
+            // Calculate the discrepancy
+            const calculatedTotal = msProduction + rmProduction + mainOffice + auxiliaryOthers + auxiliaryCanteenGuardHouses;
+            const discrepancy = totalConsumption - calculatedTotal;
+
+            // Display the results in a table with copy icons inside the Value cell
+            document.getElementById('results').innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MS Production (38%)</td>
+                            <td>
+                                ${formatNumber(msProduction)} kWh
+                                <i class="fa fa-copy copy-btn" onclick="copyToClipboard('${formatNumber(msProduction)} kWh')"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>RM Production (26%)</td>
+                            <td>
+                                ${formatNumber(rmProduction)} kWh
+                                <i class="fa fa-copy copy-btn" onclick="copyToClipboard('${formatNumber(rmProduction)} kWh')"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Main Office (21%)</td>
+                            <td>
+                                ${formatNumber(mainOffice)} kWh
+                                <i class="fa fa-copy copy-btn" onclick="copyToClipboard('${formatNumber(mainOffice)} kWh')"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Auxiliary (Others) (3%)</td>
+                            <td>
+                                ${formatNumber(auxiliaryOthers)} kWh
+                                <i class="fa fa-copy copy-btn" onclick="copyToClipboard('${formatNumber(auxiliaryOthers)} kWh')"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Auxiliary (Canteen & Guard Houses) (12%)</td>
+                            <td>
+                                ${formatNumber(auxiliaryCanteenGuardHouses)} kWh
+                                <i class="fa fa-copy copy-btn" onclick="copyToClipboard('${formatNumber(auxiliaryCanteenGuardHouses)} kWh')"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Discrepancy</strong></td>
+                            <td><strong>${formatNumber(discrepancy)} kWh</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
+    </script>
+</body>
+</html>
